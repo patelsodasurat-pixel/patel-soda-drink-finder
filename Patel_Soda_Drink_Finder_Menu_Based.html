@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b2c">
+<title>Patel Soda | Find Your Perfect Drink</title>
+<style>
+:root{--green:#123b2c;--green2:#1d5940;--cream:#fff7e7;--lime:#c7f36b;--ink:#17231c;--muted:#657168;--card:#fffdf8}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#edf4e9,#fff8eb 45%,#f5f2e9);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}
+.wrap{max-width:760px;margin:auto;padding:16px 14px 36px}.hero{background:var(--green);color:white;border-radius:26px;padding:24px 20px;position:relative;overflow:hidden;box-shadow:0 14px 34px #123b2c22}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #ffffff20;border-radius:50%;right:-65px;top:-55px;box-shadow:0 0 0 22px #ffffff08,0 0 0 45px #ffffff05}
+.brand{font-size:12px;letter-spacing:3px;font-weight:800;color:var(--lime);text-transform:uppercase}.hero h1{font-size:clamp(29px,8vw,43px);line-height:1.05;margin:12px 0 8px;max-width:460px}.hero p{margin:0;color:#e0e9e1;line-height:1.5}.logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--cream);color:var(--green);font-weight:950;font-size:22px;border:3px solid var(--lime);margin-bottom:14px}
+.progress{height:6px;background:#dce5d9;border-radius:99px;margin:20px 2px 8px;overflow:hidden}.progress span{height:100%;display:block;background:var(--green2);width:0;transition:width .25s}.stepmeta{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:8px 2px 18px}
+.panel{background:var(--card);border:1px solid #e5e8dc;border-radius:22px;padding:20px 16px;box-shadow:0 8px 25px #173d2410}.qtitle{font-size:23px;line-height:1.2;margin:0 0 7px}.hint{font-size:14px;color:var(--muted);margin:0 0 17px;line-height:1.5}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{border:1px solid #dce4d8;background:#fff;border-radius:15px;padding:14px 12px;text-align:left;min-height:76px;cursor:pointer;color:var(--ink);font-size:14px;font-weight:700;display:flex;gap:9px;align-items:center;transition:.15s}.choice .emoji{font-size:24px}.choice:focus,.choice:hover{border-color:var(--green2);background:#f1f8e9}.choice.selected{border:2px solid var(--green2);background:#eef8e7;box-shadow:inset 0 0 0 1px #eef8e7}.actions{display:flex;gap:10px;margin-top:18px}.btn{border:0;border-radius:14px;padding:14px 17px;font-size:15px;font-weight:800;cursor:pointer}.primary{background:var(--green);color:#fff;flex:1}.secondary{background:#edf0e8;color:var(--green)}.hidden{display:none!important}.foot{text-align:center;font-size:12px;color:var(--muted);padding:18px 4px}.result-top{background:var(--green);color:#fff;padding:22px;border-radius:20px;margin-bottom:14px}.eyebrow{color:var(--lime);font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.result-top h2{font-size:28px;margin:8px 0}.result-top p{margin:0;color:#e0e9e1;line-height:1.5}.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.menu-item{background:#fff;border:1px solid #e3e8dd;border-radius:13px;padding:12px;font-size:14px;font-weight:700;line-height:1.35}.menu-item small{display:block;color:var(--muted);font-weight:500;margin-top:5px}.section-title{font-size:17px;margin:21px 0 10px}.pill{display:inline-block;background:#e9f4dd;color:#275338;border-radius:100px;padding:6px 10px;font-size:12px;font-weight:800;margin:5px 4px 0 0}.allcat{border-top:1px solid #e2e7dc;padding-top:14px;margin-top:16px}.allcat details{background:#fff;border:1px solid #e2e7dc;border-radius:13px;margin:8px 0;padding:12px}.allcat summary{font-weight:800;cursor:pointer}.allcat p{margin:10px 0 0;font-size:14px;line-height:1.8;color:#33483b}
+@media(max-width:390px){.choices,.menu-grid{grid-template-columns:1fr}.panel{padding:17px 13px}.choice{min-height:62px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="logo" aria-label="Logo placeholder">P</div>
+  <div class="brand">Patel Soda Softy & Thickshake</div>
+  <h1>Find Your Perfect Drink</h1>
+  <p>Answer a few quick questions. We’ll guide you to the drink menu that fits your mood.</p>
+</header>
+<div id="quiz">
+  <div class="progress"><span id="progressbar"></span></div>
+  <div class="stepmeta" id="stepmeta">Question 1 of 4</div>
+  <section class="panel">
+    <h2 class="qtitle" id="qtitle"></h2><p class="hint" id="hint"></p>
+    <div class="choices" id="choices"></div>
+    <div class="actions"><button class="btn secondary" id="back" type="button">Back</button><button class="btn primary" id="next" type="button">Next</button></div>
+  </section>
+</div>
+<div id="result" class="hidden"></div>
+<div class="foot">Fresh • Cool • Tasty · Please confirm availability with our counter team.</div>
+</div>
+<script>
+const menu = {
+  "Thickshake": {
+    emoji:"🥤", desc:"Rich, thick and creamy — explore the full thickshake flavour menu.",
+    groups:{
+      "Regular Flavours":["Vanilla","Shahi Rose","Gulkand","Kesar","Rose Akhrot"],
+      "Fruit Flavours":["Pineapple","Strawberry","Blackcurrant","Chiku","Mango","Mixed Fruit","Orange","Litchi","Blueberry","Chiku Kaju","Mango Kaju","Rajbhog","Kiwi","Cherry Berry","Sitafal (Seasonal)"],
+      "Dry Fruit Flavours":["Royal Dry Fruit","Kaju Anjeer","Kaju Draksh","Kaju Badam","Kaju Gulkand","Badam Anjeer","Akhrot","Kaju Akhrot","Kaju Khajur","Akhrot Anjeer","Khajur Akhrot","Kaju Badam Anjeer","Honey Akhrot","Dry Fruit Thickshake"],
+      "Chocolate & Special Flavours":["Chocolate","Chocolate Chips","Chiku Chocolate","KitKat","Butterscotch Chips","Bournvita Bomb","Nescafe Coffee Thickshake"]
+    }
+  },
+  "Milkshake": {
+    emoji:"🍓", desc:"Smooth, fruity and milky — explore the milkshake flavours.",
+    groups:{
+      "Regular Flavours":["Vanilla","Shahi Rose","Gulkand","Kesar"],
+      "Fruit Flavours":["Pineapple","Strawberry","Blackcurrant","Chiku","Mango","Mixed Fruit","Orange","Litchi","Blueberry","Chiku Kaju","Mango Kaju","Rajbhog","Kiwi","Sitafal (Seasonal)"],
+      "Dry Fruit Flavours":["Royal Dry Fruit","Kaju Anjeer","Kaju Draksh","Kaju Badam","Kaju Gulkand","Akhrot","Kaju Akhrot","Kaju Khajur","Honey Akhrot"],
+      "Chocolate & Special Flavours":["Chocolate","Chocolate Chips","Chiku Chocolate","KitKat","Butterscotch Chips","Bournvita","Cold Boost","Cold Coffee"]
+    }
+  },
+  "Mojito": {emoji:"🍋",desc:"Minty, citrusy and refreshing — see available mojito flavours.",groups:{"Mojito Flavours":["Lemon Mint Mojito","Classic Mint Mojito","Blue Mojito","Green Apple Mojito","Orange Mojito","Fruit Mojito"]}},
+  "Ice Crush Soda": {emoji:"🧊",desc:"Icy, colourful and refreshing — see the ice crush soda choices.",groups:{"Ice Crush Soda Flavours":["Lemon","Blueberry","Mango","Green Apple","Orange","Cola","Mixed Fruit"]}},
+  "Bubble Soda": {emoji:"🫧",desc:"Fizzy soda with bursting bubble-style fun — explore flavours.",groups:{"Bubble Soda Flavours":["Blueberry","Mango","Green Apple","Orange","Lemon","Cola","Strawberry"]}},
+  "Soda / Pop Soda": {emoji:"🥤",desc:"A fizzy refreshment — check the available soda options.",groups:{"Soda Flavours":["Pop Soda","Lemon Soda","Jeera Soda","Masala Soda","Classic Soda"]}},
+  "Lassi": {emoji:"🥛",desc:"A desi, smooth and creamy favourite.",groups:{"Lassi Options":["Plain Lassi","Malai Lassi","American Malai Lassi","Sweet Lassi","Dry Fruit Lassi"]}},
+  "Softy": {emoji:"🍦",desc:"A chilled frozen dessert for a sweet treat.",groups:{"Softy Options":["Vanilla Softy","Chocolate Softy","Mix Softy"]}},
+  "Energy Drinks": {emoji:"⚡",desc:"For customers choosing an energy drink. Check the can label for caffeine information.",groups:{"Energy Drinks":["Red Bull","Monster","HELL Energy Drink"],"Mixers & Tonic":["Schweppes Tonic Water"]}}
+};
+const questions = [
+ {key:"mood",title:"What are you in the mood for?",hint:"Choose the feeling you want from your drink.",opts:[
+  ["Fresh & refreshing","🍋","fresh"],["Creamy & rich","🥤","creamy"],["Desi & traditional","🥛","desi"],["Something exciting","⚡","exciting"],["A chilled sweet treat","🍦","dessert"]]},
+ {key:"flavour",title:"Which flavour sounds good?",hint:"Pick the flavour family you feel like today.",opts:[
+  ["Lemon, mint or citrus","🍋","citrus"],["Fruity & sweet","🍓","fruit"],["Chocolate & creamy","🍫","chocolate"],["Malai, milk or desi","🥛","milky"],["Bold energy-drink taste","⚡","energy"],["Fizzy soda","🫧","fizzy"]]},
+ {key:"texture",title:"What texture do you prefer?",hint:"This helps narrow down your menu.",opts:[
+  ["Light & fizzy","🫧","fizzy"],["Icy & chilled","🧊","icy"],["Thick & creamy","🥤","thick"],["Smooth & milky","🥛","smooth"],["Frozen dessert","🍦","frozen"]]},
+ {key:"category",title:"Which menu would you like to explore?",hint:"You can choose directly, or select “Surprise me” for a match based on your answers.",opts:[
+  ["Surprise me","✨","auto"],["Thickshake","🥤","Thickshake"],["Milkshake","🍓","Milkshake"],["Mojito","🍋","Mojito"],["Ice Crush Soda","🧊","Ice Crush Soda"],["Bubble Soda","🫧","Bubble Soda"],["Soda / Pop Soda","🥤","Soda / Pop Soda"],["Lassi","🥛","Lassi"],["Softy","🍦","Softy"],["Energy Drinks","⚡","Energy Drinks"]]}
+];
+let step=0, answers={};
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[step]; $("qtitle").textContent=q.title;$("hint").textContent=q.hint;
+ $("stepmeta").textContent=`Question ${step+1} of ${questions.length}`;
+ $("progressbar").style.width=((step+1)/questions.length*100)+"%";
+ $("choices").innerHTML="";
+ q.opts.forEach(([label,emoji,value])=>{
+   const b=document.createElement("button");b.type="button";b.className="choice"+(answers[q.key]===value?" selected":"");
+   b.innerHTML=`<span class="emoji">${emoji}</span><span>${label}</span>`;
+   b.onclick=()=>{answers[q.key]=value;renderChoicesOnly();};
+   $("choices").appendChild(b);
+ });
+ $("back").style.visibility=step===0?"hidden":"visible";
+ $("next").textContent=step===questions.length-1?"Find My Menu":"Next";
+}
+function renderChoicesOnly(){const q=questions[step];[...$("choices").children].forEach((b,i)=>b.classList.toggle("selected",q.opts[i][2]===answers[q.key]));}
+function autoCategory(){
+ if(answers.mood==="dessert"||answers.texture==="frozen")return "Softy";
+ if(answers.flavour==="energy"||answers.mood==="exciting"&&answers.flavour!=="citrus")return "Energy Drinks";
+ if(answers.mood==="desi"||answers.flavour==="milky"||answers.texture==="smooth")return "Lassi";
+ if(answers.mood==="creamy"||answers.flavour==="chocolate"||answers.texture==="thick")return answers.flavour==="chocolate"?"Thickshake":"Milkshake";
+ if(answers.flavour==="citrus"||answers.mood==="fresh")return "Mojito";
+ if(answers.flavour==="fizzy"||answers.texture==="fizzy")return "Bubble Soda";
+ if(answers.texture==="icy")return "Ice Crush Soda";
+ return "Soda / Pop Soda";
+}
+function showResult(){
+ const chosen=answers.category&&answers.category!=="auto"?answers.category:autoCategory();
+ const data=menu[chosen]; $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+ let groups="";
+ Object.entries(data.groups).forEach(([group,items])=>{
+   groups+=`<h3 class="section-title">${group}</h3><div class="menu-grid">`+items.map(item=>`<div class="menu-item">${item}<small>Ask at the counter for availability</small></div>`).join("")+"</div>";
+ });
+ const reasons={
+  "Thickshake":"You chose rich, thick or chocolate-style flavours.",
+  "Milkshake":"Your answers point toward a smooth, fruity or creamy drink.",
+  "Mojito":"Your answers point toward a fresh, citrusy and refreshing drink.",
+  "Ice Crush Soda":"Your answers point toward an icy and chilled drink.",
+  "Bubble Soda":"Your answers point toward a fizzy and fun drink.",
+  "Soda / Pop Soda":"Your answers point toward a classic fizzy refreshment.",
+  "Lassi":"Your answers point toward a smooth, milky or traditional desi drink.",
+  "Softy":"Your answers point toward a chilled frozen dessert.",
+  "Energy Drinks":"You selected bold, exciting energy-drink flavours. Check the product label for caffeine."
+ };
+ $("result").innerHTML=`<div class="result-top"><div class="eyebrow">Your drink match</div><h2>${data.emoji} ${chosen}</h2><p>${reasons[chosen]}</p><span class="pill">No prices shown</span><span class="pill">Menu suggestions</span></div><section class="panel"><h2 class="qtitle">Explore the full ${chosen} menu</h2><p class="hint">${data.desc}</p>${groups}<div class="actions"><button class="btn secondary" id="restart">Start Again</button><button class="btn primary" id="counter">Show at Counter</button></div><p class="hint" id="countermsg" style="margin-top:12px"></p></section><section class="allcat"><h3 class="section-title">Explore another category</h3>${Object.entries(menu).map(([name,d])=>`<details><summary>${d.emoji} ${name}</summary>${Object.entries(d.groups).map(([g,items])=>`<p><strong>${g}:</strong><br>${items.join(" · ")}</p>`).join("")}</details>`).join("")}</section>`;
+ $("restart").onclick=()=>{step=0;answers={};$("result").classList.add("hidden");$("quiz").classList.remove("hidden");render();window.scrollTo({top:0,behavior:"smooth"});};
+ $("counter").onclick=()=>{$("countermsg").textContent=`Please show this screen to the Patel Soda counter team and ask which ${chosen} flavours are currently available.`;};
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("back").onclick=()=>{if(step>0){step--;render();}};
+$("next").onclick=()=>{const q=questions[step];if(!answers[q.key]){alert("Please choose one answer to continue.");return;}if(step<questions.length-1){step++;render();}else showResult();};
+render();
+</script>
+</body>
+</html>
